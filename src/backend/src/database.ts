@@ -50,11 +50,10 @@ class Database {
       await this.createTenantTables(schemaName);
 
       // Create a pool for this tenant's schema
-      const tenantPool = new Pool({
-        ...this.getPoolConfig('multicrm'),
-        schema: schemaName,
-        searchPath: schemaName,
-      });
+      const tenantPool = new Pool(this.getPoolConfig('multicrm'));
+
+      // Set the default search path to the tenant's schema
+      await tenantPool.query(`SET search_path TO ${schemaName}`);
 
       this.pools.set(tenantId, tenantPool);
       console.log(`✅ Created tenant pool for ${tenantId}`);

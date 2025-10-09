@@ -33,7 +33,7 @@ const Dashboard: React.FC = () => {
   const { currentTenant } = useTenant()
 
   // Fetch dashboard data
-  const { data: dashboardData, isLoading, error } = useQuery({
+  const { data: _dashboardData, isLoading, error } = useQuery({
     queryKey: ['dashboard', currentTenant?.id],
     queryFn: () => apiService.get('/dashboard'),
     enabled: !!currentTenant,
@@ -222,7 +222,7 @@ const Dashboard: React.FC = () => {
                 fill="#8884d8"
                 dataKey="value"
               >
-                {taskCompletionData.map((entry, index) => (
+                {taskCompletionData.map((_entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>

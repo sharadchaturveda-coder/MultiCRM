@@ -11,6 +11,15 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['@tanstack/react-query', 'axios', 'date-fns'],
+          charts: ['recharts'],
+        },
+      },
+    },
   },
   resolve: {
     alias: {
