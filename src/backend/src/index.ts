@@ -2,10 +2,10 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { config } from './config';
-import { database } from './database';
-import tenantRoutes from './routes/tenants';
-import { tenantMiddleware } from './middleware/tenant';
+import { config } from './config.js';
+import { database } from './database.js';
+import tenantRoutes from './routes/tenants.js';
+import { tenantMiddleware } from './middleware/tenant.js';
 
 const app = express();
 const port = config.port;

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { database } from '../database';
+import { database } from '../database.js';
 
 // Extend Express Request to include tenant information
 declare global {

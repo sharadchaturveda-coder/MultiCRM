@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { database } from '../database';
-import { Tenant } from '../../../shared/src';
+import { database } from '../database.js';
+import { Tenant } from '../../../shared/src/index.js';
 
 const router = Router();
 
