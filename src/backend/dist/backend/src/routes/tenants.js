@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { database } from '../database';
+import { database } from '../database.js';
 const router = Router();
 // Create tenant
 router.post('/', async (req, res) => {

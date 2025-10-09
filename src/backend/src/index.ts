@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url'; // ✅ ESM-safe way to get __dirname
+
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -7,8 +11,18 @@ import { database } from './database.js';
 import tenantRoutes from './routes/tenants.js';
 import { tenantMiddleware } from './middleware/tenant.js';
 
+// ✅ Recreate __dirname for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ✅ Force-load the .env file from the backend root, not dist/
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+console.log('🌍 Loaded environment from:', path.resolve(__dirname, '../.env'));
+console.log('🔗 DATABASE_URL:', process.env.DATABASE_URL);
+
 const app = express();
-const port = config.port;
+const port = config.server.port;
 
 // Middleware
 app.use(helmet());
@@ -22,7 +36,7 @@ app.get('/health', async (_req: Request, res: Response) => {
   res.json({
     status: dbHealthy ? 'ok' : 'error',
     timestamp: new Date().toISOString(),
-    database: dbHealthy ? 'connected' : 'disconnected'
+    database: dbHealthy ? 'connected' : 'disconnected',
   });
 });
 
@@ -37,7 +51,7 @@ app.use('/api/tenant/*', tenantMiddleware, (req, res) => {
 // Start server
 app.listen(port, () => {
   console.log(`🚀 MultiCRM Backend running on port ${port}`);
-  console.log(`📊 Database: ${config.database.host}:${config.database.port}/${config.database.name}`);
+  console.log(`📊 Database: ${config.database.connectionString}`);
 });
 
 // Graceful shutdown

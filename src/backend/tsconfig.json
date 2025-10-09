@@ -1,21 +1,21 @@
 {
   "compilerOptions": {
     "target": "es2022",
-    "module": "node16",
-    "moduleResolution": "node16",
+    "module": "esnext",
+    "moduleResolution": "node",
     "lib": ["es2022"],
     "outDir": "./dist",
-    "rootDir": "../..",
+    "rootDir": "../",                        // 👈 expand root to include shared/
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "baseUrl": "../..",
+    "baseUrl": ".",                          // 👈 enable relative paths
     "paths": {
-      "@multicrm/shared": ["src/shared/src"]
+      "@shared/*": ["../shared/src/*"]       // 👈 optional alias for imports
     }
   },
-  "include": ["src/**/*", "scripts/**/*", "../shared/src/**/*"],
+  "include": ["src/**/*", "../shared/src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

@@ -5,35 +5,21 @@ async function initializeDatabase() {
   console.log('🗄️  Initializing MultiCRM database...');
 
   const pool = new Pool({
-    host: config.database.host,
-    port: config.database.port,
-    database: config.database.name || 'postgres',
-    user: config.database.user,
-    password: config.database.password,
-    ssl: config.database.ssl || false
+    connectionString: config.database.connectionString,
+    ssl: config.database.ssl,
   });
 
   try {
-    // Create database if it doesn't exist
-    console.log('📦 Creating database...');
-    await pool.query(`CREATE DATABASE ${config.database.name} WITH OWNER = $1`, [config.database.user]);
+    // Basic connectivity check
+    console.log('📦 Checking database connection...');
+    await pool.query('SELECT 1');
+    console.log('✅ Database connection verified');
 
-    console.log('✅ Database created successfully');
-
-    // Create tenants table in the new database
-    const dbPool = new Pool({
-      host: config.database.host,
-      port: config.database.port,
-      database: config.database.name,
-      user: config.database.user,
-      password: config.database.password,
-      ssl: config.database.ssl || false
-    });
-
-    console.log('🏢 Creating tenants table...');
-    await dbPool.query(`
+    // Ensure the "tenants" table exists
+    console.log('🏢 Creating tenants table (if missing)...');
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS tenants (
-        id UUID PRIMARY KEY,
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         name TEXT NOT NULL,
         domain TEXT UNIQUE NOT NULL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -44,16 +30,10 @@ async function initializeDatabase() {
       CREATE INDEX IF NOT EXISTS idx_tenants_created ON tenants(created_at);
     `);
 
-    await dbPool.end();
-    console.log('✅ Tenants table created successfully');
-
-  } catch (error: any) {
-    if (error.code === '42P04') {
-      console.log('ℹ️  Database already exists, skipping creation');
-    } else {
-      console.error('❌ Error initializing database:', error);
-      throw error;
-    }
+    console.log('✅ Tenants table ready');
+  } catch (error) {
+    console.error('❌ Database initialization failed:', error);
+    process.exit(1);
   } finally {
     await pool.end();
   }
@@ -61,7 +41,7 @@ async function initializeDatabase() {
   console.log('🎉 Database initialization complete!');
 }
 
-// Run if called directly
+// Run directly via `npm run migrate` or similar
 if (process.argv[1]?.endsWith('init.ts')) {
   initializeDatabase()
     .then(() => process.exit(0))

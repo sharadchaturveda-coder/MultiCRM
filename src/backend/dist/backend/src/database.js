@@ -1,27 +1,21 @@
 import { Pool } from 'pg';
-import { config } from './config';
+import dotenv from 'dotenv';
+dotenv.config();
 class Database {
     pools = new Map();
     masterPool;
     constructor() {
-        this.masterPool = new Pool(this.getPoolConfig('multicrm'));
+        // ✅ Render requires SSL for hosted Postgres
+        this.masterPool = new Pool({
+            connectionString: process.env.DATABASE_URL,
+            ssl: { rejectUnauthorized: false },
+        });
         this.initializeMasterConnection();
-    }
-    getPoolConfig(databaseName) {
-        return {
-            host: config.database.host,
-            port: config.database.port,
-            database: databaseName,
-            user: config.database.user,
-            password: config.database.password,
-            ssl: config.database.ssl,
-            max: 20,
-            idleTimeoutMillis: 30000,
-        };
     }
     async initializeMasterConnection() {
         try {
             await this.masterPool.query('SELECT 1');
+            console.log(`📊 Database: ${process.env.DATABASE_URL}`);
             console.log('✅ Master database connection established');
         }
         catch (error) {
@@ -29,21 +23,18 @@ class Database {
             process.exit(1);
         }
     }
-    // Create tenant-specific schema and database connection
     async getTenantPool(tenantId) {
         if (this.pools.has(tenantId)) {
             return this.pools.get(tenantId);
         }
-        // Create schema-specific database for tenant
         const schemaName = `tenant_${tenantId.replace(/-/g, '_')}`;
         try {
-            // Create schema if it doesn't exist
             await this.masterPool.query(`CREATE SCHEMA IF NOT EXISTS ${schemaName}`);
-            // Create tables in the new schema (this would be migration scripts)
             await this.createTenantTables(schemaName);
-            // Create a pool for this tenant's schema
-            const tenantPool = new Pool(this.getPoolConfig('multicrm'));
-            // Set the default search path to the tenant's schema
+            const tenantPool = new Pool({
+                connectionString: process.env.DATABASE_URL,
+                ssl: { rejectUnauthorized: false },
+            });
             await tenantPool.query(`SET search_path TO ${schemaName}`);
             this.pools.set(tenantId, tenantPool);
             console.log(`✅ Created tenant pool for ${tenantId}`);
@@ -56,7 +47,7 @@ class Database {
     }
     async createTenantTables(schemaName) {
         const queries = [
-            // Users table
+            // 🧱 Users table
             `CREATE TABLE IF NOT EXISTS ${schemaName}.users (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         first_name TEXT NOT NULL,
@@ -67,7 +58,7 @@ class Database {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       )`,
-            // Contacts table
+            // 🧱 Contacts table
             `CREATE TABLE IF NOT EXISTS ${schemaName}.contacts (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         user_id UUID REFERENCES ${schemaName}.users(id),
@@ -79,7 +70,7 @@ class Database {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       )`,
-            // Organizations table
+            // 🧱 Organizations table
             `CREATE TABLE IF NOT EXISTS ${schemaName}.organizations (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         name TEXT NOT NULL,
@@ -88,11 +79,12 @@ class Database {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       )`,
-            // Update contacts to reference organizations
+            // 🧱 Update contacts to reference organizations
             `ALTER TABLE ${schemaName}.contacts
        ADD CONSTRAINT fk_contacts_organization
-       FOREIGN KEY (organization_id) REFERENCES ${schemaName}.organizations(id)`,
-            // Leads table
+       FOREIGN KEY (organization_id) REFERENCES ${schemaName}.organizations(id)
+       ON DELETE SET NULL`,
+            // 🧱 Leads table
             `CREATE TABLE IF NOT EXISTS ${schemaName}.leads (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         organization_id UUID REFERENCES ${schemaName}.organizations(id),
@@ -105,7 +97,7 @@ class Database {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       )`,
-            // Tasks table
+            // 🧱 Tasks table
             `CREATE TABLE IF NOT EXISTS ${schemaName}.tasks (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         user_id UUID REFERENCES ${schemaName}.users(id),
@@ -116,28 +108,25 @@ class Database {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       )`,
-            // Indexes for better performance
+            // ⚡ Indexes for performance
             `CREATE INDEX IF NOT EXISTS idx_users_email ON ${schemaName}.users(email)`,
             `CREATE INDEX IF NOT EXISTS idx_contacts_user ON ${schemaName}.contacts(user_id)`,
             `CREATE INDEX IF NOT EXISTS idx_leads_organization ON ${schemaName}.leads(organization_id)`,
-            `CREATE INDEX IF NOT EXISTS idx_tasks_user ON ${schemaName}.tasks(user_id)`,
+            `CREATE INDEX IF NOT EXISTS idx_tasks_user ON ${schemaName}.tasks(user_id)`
         ];
         for (const query of queries) {
             await this.masterPool.query(query);
         }
     }
-    // Get master pool for cross-tenant operations
     getMasterPool() {
         return this.masterPool;
     }
-    // Cleanup method
     async close() {
         await Promise.all([
             this.masterPool.end(),
             ...Array.from(this.pools.values()).map(pool => pool.end())
         ]);
     }
-    // Health check
     async healthCheck() {
         try {
             await this.masterPool.query('SELECT 1');

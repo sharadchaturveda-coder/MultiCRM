@@ -1,4 +1,4 @@
-import { database } from '../database';
+import { database } from '../database.js';
 // Tenant middleware - extracts tenant ID from header and sets up database pool
 export const tenantMiddleware = async (req, res, next) => {
     try {
