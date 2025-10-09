@@ -49,6 +49,10 @@ app.use('/api/tenant/*', tenantMiddleware, (req, res) => {
 });
 
 // Start server
+app.get('/', (_req, res) => {
+  res.send('🚀 MultiCRM Backend is running!');
+});
+
 app.listen(port, () => {
   console.log(`🚀 MultiCRM Backend running on port ${port}`);
   console.log(`📊 Database: ${config.database.connectionString}`);
