@@ -10,43 +10,64 @@
 | Frontend | 📋 **PLANNED** | React application |
 | Testing | 📋 **PLANNED** | Contract-based suite |
 
-## 📖 Documentation Paths
+## 📖 Documentation Structure (Modular & Developer-Friendly)
 
-### ⚡ **Get Started (5 minutes)**
-1. [README.md](../README.md) - Overview
-2. **[getting-started.md](getting-started.md)** - Setup guide
-3. ✅ Ready to run
+### 🚀 **Quick Start (~5 minutes)**
+- [**README.md**](../README.md) - Project overview and current status
+- [**getting-started.md**](getting-started.md) - Local setup and first API tests
 
-### 👨‍💻 **Developer Deep-Dive (30 minutes)**
-1. [overview.md](overview.md) - Architecture
-2. [data-model.md](data-model.md) - Entities
-3. [api-reference.md](api-reference.md) - REST API
-4. [development.md](development.md) - Contributing
+### 🧱 **Architecture Understanding (~20 minutes)**
+- [**overview.md**](overview.md) - System architecture and technical stack
+- [**data-model.md**](data-model.md) - Entity relationships and database schema
 
-### 🏢 **Specialized Domains (20 minutes)**
-1. [domain-adaptation.md](domain-adaptation.md) - Template reuse
-2. School/Healthcare examples
-3. Custom entity patterns
+### 🎯 **Developer Guides (< 100 lines each)**
+- [**frontend-guide.md**](frontend-guide.md) - React/Vite development patterns
+- [**backend-guide.md**](backend-guide.md) - Express/PostgreSQL server patterns
+- [**api-reference.md**](api-reference.md) - API navigation hub ✅
+- [**api-authentication.md**](api-authentication.md) - Auth & tenancy patterns
+- [**api-tenant-operations.md**](api-tenant-operations.md) - Tenant management
+- [**api-entity-operations.md**](api-entity-operations.md) - CRUD endpoints
+- [**api-advanced-features.md**](api-advanced-features.md) - Batch ops & integrations
 
-### 🚀 **Production (25 minutes)**
-1. [deployment.md](deployment.md) - Docker & scaling
-2. Environment variables
-3. Security hardening
+### 🔄 **Development Workflow (~15 minutes)**
+- [**development.md**](development.md) - Contributing guidelines ✅
+- [**deployment.md**](deployment.md) - Production hosting and CI/CD ✅
 
-### 🔧 **Problem Solving**
-1. [troubleshooting.md](troubleshooting.md) - Common issues
-2. Debug commands
-3. Recovery procedures
+### � **Product Requirements (~15 minutes)**
+- [**prd.md**](prd.md) - Complete product requirements document
+- **User Personas** - 5 distinct user roles defined
+- **Technical Specifications** - Complete functional/non-functional requirements
+- **Acceptance Criteria** - Success metrics and validation rules
+- **Timeline & Milestones** - 24-month development roadmap
+
+### �🏢 **Domain Adaptation (~10 minutes)**
+- [**domain-adaptation.md**](domain-adaptation.md) - Create specialized CRMs ✅
+- **School CRM Example** - Student/class management
+- **Hospital CRM Example** - Patient/appointment tracking
+- **Hotel CRM Example** - Reservations housekeeping
+
+### 🔮 **Future Roadmap (~20 minutes)**
+- [**future-roadmap.md**](future-roadmap.md) - Development priorities and timeline
+- **Authentication Implementation** - JWT security
+- **Complete CRM APIs** - Full entity CRUD operations
+- **Domain Specializations** - School/Hospital/Hotel CRMs
+
+### 🔧 **Troubleshooting (~10 minutes)**
+- [**troubleshooting.md**](troubleshooting.md) - Common issues and fixes ✅
 
 ---
 
 ## 🔍 Reference Materials
 
-### Specifications (Planning Phase)
-- [Main Spec](../specs/001-universal-crm-core/spec.md)
-- [Implementation Plan](../specs/001-universal-crm-core/plan.md)
-- [Data Model Spec](../specs/001-universal-crm-core/data-model.md)
-- [API Contracts](../specs/001-universal-crm-core/contracts/)
+### Specification-Driven Development (SDD)
+**"Specifications define truth. Code merely fulfills it."**
+
+- [**SDD Foundation Document**](../specs/000-foundation/spec-dd.md) - Core philosophy & workflow rules
+- [**Main Spec (PRD)**](../specs/001-universal-crm-core/spec.md) - Universal CRM requirements
+- [**Implementation Plan**](../specs/001-universal-crm-core/plan.md) - Technical architecture design
+- [**Tasks**](../specs/001-universal-crm-core/tasks.md) - Executable development breakdown
+- [**Data Model**](../specs/001-universal-crm-core/data-model.md) - Entity schemas & relationships
+- [**API Contracts**](../specs/001-universal-crm-core/contracts/) - REST endpoint specifications
 
 ### Codebase Areas
 - [Root README](../README.md) - Quick start

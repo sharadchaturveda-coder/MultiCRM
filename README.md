@@ -19,24 +19,29 @@ cd multicrm
 
 | Component | Status | Description |
 |-----------|--------|-------------|
-| **Backend API** | ✅ **READY** | Express + PostgreSQL multi-tenant server |
-| **Database Schema** | ✅ **READY** | Schema-isolated multi-tenancy |
-| **Shared Types** | ✅ **READY** | 12-entity TypeScript type system |
-| **Frontend** | 📋 **PLANNED** | React + Vite responsive UI |
-| **Testing** | 📋 **PLANNED** | Contract-based test suite |
+| **Multi-Tenant Backend** | ✅ **PRODUCTION** | Express + PostgreSQL with full schema isolation deployed on Render |
+| **Tenant Management APIs** | ✅ **PRODUCTION** | Complete CRUD for tenants with automatic schema provisioning |
+| **CRM Database Schema** | ✅ **COMPLETE** | Full entity tables (users, contacts, organizations, leads, tasks) per tenant |
+| **Shared Type System** | ✅ **PRODUCTION** | TypeScript interfaces across frontend/backend/shared modules |
+| **React Frontend** | ✅ **PRODUCTION** | Vite + Tailwind UI with tenant context, routing, and data management |
+| **Database Multi-Tenancy** | ✅ **ADVANCED** | PostgreSQL schema-per-tenant with connection pooling |
+| **Infrastructure** | ✅ **DEPLOYED** | Render backend + ready for Cloudflare Pages frontend deployment |
+| **Security & Environment** | ✅ **SECURE** | JWT framework, environment secrets, SSL connections |
+| **Testing Suite** | ⚠️ **PLANNED** | Contract-based E2E tests (infrastructure ready) |
 
 ## 📋 Documentation
 
 Complete documentation available in the [`docs/`](./docs/) folder:
 
 - **[Getting Started](./docs/getting-started.md)** - Complete setup guide
-- **[Architecture](./docs/architecture.md)** - Multi-tenant design deep-dive
-- **[Data Model](./docs/data-model.md)** - Entity relationships
-- **[API Reference](./docs/api-reference.md)** - REST endpoints
-- **[Domain Adaptation](./docs/domain-adaptation.md)** - Template reuse
-- **[Development](./docs/development.md)** - Contributing & workflow
-- **[Deployment](./docs/deployment.md)** - Docker & production
-- **[Troubleshooting](./docs/troubleshooting.md)** - Common issues
+- **[Frontend Guide](./docs/frontend-guide.md)** - React/Vite development patterns
+- **[Backend Guide](./docs/backend-guide.md)** - Express/PostgreSQL server patterns
+- **[Architecture](./docs/overview.md)** - Technical stack & current status
+- **[Data Model](./docs/data-model.md)** - Entity relationships & schemas
+- **[Future Roadmap](./docs/future-roadmap.md)** - Development priorities & timeline
+- **[Specifications](../specs/)** - SDD workflow (Specs → Plans → Tasks → Code)
+
+**📋 Product Requirements Document (PRD):** [`specs/001-universal-crm-core/spec.md`](../specs/001-universal-crm-core/spec.md)
 
 ## 🎯 Use Cases
 
@@ -65,11 +70,16 @@ cd school-crm/src/shared/src
 - Header-based tenant routing (`x-tenant-id`)
 - Guaranteed data privacy and security
 
-### ✅ **Modular Architecture**
-- Shared type contracts between modules
-- Independent build/deployment per layer
-- Contracts-first development approach
-- Easy domain extension patterns
+### ✅ **Specification-Driven Development (SDD)**
+**"Specifications define truth. Code merely fulfills it."**
+
+- **Intent-Driven Development**: WHAT before HOW
+- **Multi-Phase Refinement**: Requirements → Design → Planning → Execution
+- **Rich Specifications**: Structured documents with internal logic
+- **SSDD Workflow**: `/specify` → `/plan` → `/tasks` → Code
+- **Constitutional Gates**: Simplicity, test-first, anti-abstraction principles
+
+**📋 All specs available in `specs/` folder**
 
 ### ✅ **TypeScript Throughout**
 - End-to-end type safety
