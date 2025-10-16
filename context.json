@@ -1,0 +1,26 @@
+{
+  "entry_points": {
+    "backend": "src/backend/src/index.ts",
+    "frontend": "src/frontend/src/main.tsx",
+    "shared_types": "src/shared/src/types.ts"
+  },
+  "meta_files": [
+    "constitution.md",
+    "meta/meta.md",
+    "decisions/ledger.md"
+  ],
+  "toolchain": [
+    "scripts/spec-to-tasks.js",
+    "scripts/validate-meta-inheritance.js",
+    "scripts/system-status.js",
+    "scripts/check-review-queue.js"
+  ],
+  "directories": [
+    "specs/",
+    "docs/",
+    "meta/",
+    "src/",
+    "scripts/",
+    "tests/"
+  ]
+}

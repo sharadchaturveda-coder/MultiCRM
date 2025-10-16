@@ -1,3 +1,9 @@
+/*
+ * @context: backend-entry
+ * @depends: shared/types, backend/config, backend/database, backend/middleware/tenant, backend/routes/tenants
+ * @exports: express server instance, health check endpoint, tenant-scoped routes, tenant management API
+ */
+
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url'; // ✅ ESM-safe way to get __dirname

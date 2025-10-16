@@ -1,3 +1,7 @@
+// @context: shared-types
+// @depends: none (root type definitions)
+// @exports: CRM entity types, API contracts, utility types, enums
+
 // UUID type for identifiers
 export type UUID = string;
 

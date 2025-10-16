@@ -1,3 +1,8 @@
+/*
+ * @context: backend-entry
+ * @depends: shared/types, backend/config, backend/database, backend/middleware/tenant, backend/routes/tenants
+ * @exports: express server instance, health check endpoint, tenant-scoped routes, tenant management API
+ */
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url'; // ✅ ESM-safe way to get __dirname
@@ -39,6 +44,9 @@ app.use('/api/tenant/*', tenantMiddleware, (req, res) => {
     res.json({ success: true, tenantId: req.tenantId });
 });
 // Start server
+app.get('/', (_req, res) => {
+    res.send('🚀 MultiCRM Backend is running!');
+});
 app.listen(port, () => {
     console.log(`🚀 MultiCRM Backend running on port ${port}`);
     console.log(`📊 Database: ${config.database.connectionString}`);
